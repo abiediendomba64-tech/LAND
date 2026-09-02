@@ -29,6 +29,22 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', serverTime: new Date().toISOString() });
 });
 
+// URL asset crawler used by the frontend in local/Express mode.
+app.post('/api/grab-url-assets', async (req, res) => {
+  try {
+    const { crawlHtml } = await import('./netlify/lib/crawler.mjs');
+    const result = await crawlHtml(req.body?.url || req.body?.targetUrl, {
+      timeoutMs: Math.min(Math.max(Number(req.body?.timeoutMs) || 15000, 3000), 20000),
+      maxBytes: Math.min(Math.max(Number(req.body?.maxBytes) || 5 * 1024 * 1024, 100_000), 8 * 1024 * 1024),
+      maxAssets: Math.min(Math.max(Number(req.body?.maxAssets) || 500, 1), 1000),
+      maxLinks: Math.min(Math.max(Number(req.body?.maxLinks) || 300, 1), 1000),
+    });
+    res.json(result);
+  } catch (error: any) {
+    res.status(502).json({ success: false, error: error?.message || 'Gagal mengambil assets.' });
+  }
+});
+
 // AI Google Page 1 Rank 1 Content & Schema Generator
 app.post('/api/ai/page1-seo', async (req, res) => {
   try {

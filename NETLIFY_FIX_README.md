@@ -1,26 +1,21 @@
-# Netlify deployment fix
+# LAND — deployment fix
 
-This patch keeps the existing Express server for local development and adds Netlify Functions for production.
+## Struktur
+Project ini dikembalikan ke struktur `src/components`, `src/services`, `src/utils`, dan `src/data` agar import relatif Vite/TypeScript konsisten.
 
-## Added
-- `netlify.toml`
-- `netlify/functions/grab-url-assets.mjs`
-- `netlify/functions/health.mjs`
-- `npm run build:client`
+## Netlify
+Build command: `npm run build:client`
+Publish directory: `dist`
+Functions directory: `netlify/functions`
 
-## API
-- `POST /api/grab-url-assets` -> asset extraction function
-- `GET /api/health` -> health function
+API yang tersedia:
+- `POST /api/grab-url-assets`
+- `GET /api/health`
+- `POST /api/ai/page1-seo`
 
-The existing `/api/ai/page1-seo` redirect is included, but this bundle does not yet contain a Netlify Function implementation for it. The existing Express `server.ts` remains available for local `npm run dev` / `npm start`.
+`/api/grab-url-assets` mengambil HTML secara server-side, mengikuti redirect terbatas, mengekstrak metadata, link, gambar, script, stylesheet, media, icon, `srcset`, dan CSS `url(...)`.
 
-## Netlify settings
-Use the repository root as the base directory. Build command:
+Crawler tidak menjalankan JavaScript dari situs target. Validasi URL dan pembatasan ukuran/timeouts digunakan untuk mengurangi risiko SSRF dan resource exhaustion.
 
-`npm run build:client`
-
-Publish directory:
-
-`dist`
-
-Do not set the publish directory to the deployment bundle of generated HTML files if you want the React application and Netlify Functions together.
+## Environment
+Set `GEMINI_API_KEY` di environment Netlify jika fitur AI ingin memakai Gemini. Tanpa key, Page 1 SEO tetap mengembalikan fallback deterministik.

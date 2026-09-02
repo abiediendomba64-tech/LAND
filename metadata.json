@@ -1,0 +1,6 @@
+{
+  "name": "Landing Page & Portal Suite (AMP, Portal & Register)",
+  "description": "Generator landing page AMP Google valid, portal responsif, registrasi VIP, safe link bridge, AI SEO content generator, promo & event generator, skema per page JSON-LD, auto analisa error/bug validator dengan 1-click fix, ads & safe-zone checker, auto CDN converter, dan Cyber Shield Anti-Inspect Protection.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
